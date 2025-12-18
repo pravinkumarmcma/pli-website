@@ -69,8 +69,15 @@ document.getElementById('applicationForm').addEventListener('submit', async func
     console.error(err);
   }
 });
+if (!/^[0-9]{10}$/.test(data.mobile)) {
+  document.getElementById('message').innerHTML =
+    "<span class='error'>Enter a valid 10-digit mobile number.</span>";
+  return;
+}
+
 </script>
 
 </body>
 </html>
+
 
