@@ -17,7 +17,7 @@
 <form id="applicationForm">
   
   <input name="name" id="name" placeholder="Full Name *" required>
-  <input name="mobile" id="mobile" placeholder="Mobile Number *" required>
+  <input name="mobile" id="mobile" placeholder="Mobile Number *" pattern="[0-9]{10}" title="Enter 10 digit mobile number" required>
   <input name="dob" id="dob" type="date" placeholder="Date of Birth *" required>
 
   <select name="plan" id="plan" required>
@@ -73,3 +73,4 @@ document.getElementById('applicationForm').addEventListener('submit', async func
 
 </body>
 </html>
+
