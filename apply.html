@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PLI / RPLI Application</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, select { width: 100%; margin: 8px 0; padding: 10px; }
+    button { padding: 10px 20px; background: #007bff; color: #fff; border: none; cursor: pointer; }
+    .error { color: red; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<h2>Postal Life Insurance Application</h2>
+
+<form id="applicationForm">
+  
+  <input name="name" id="name" placeholder="Full Name *" required>
+  <input name="mobile" id="mobile" placeholder="Mobile Number *" required>
+  <input name="dob" id="dob" type="date" placeholder="Date of Birth *" required>
+
+  <select name="plan" id="plan" required>
+    <option value="">Select Plan *</option>
+    <option value="PLI">PLI</option>
+    <option value="RPLI">RPLI</option>
+  </select>
+
+  <input name="sum" id="sum" placeholder="Sum Assured (e.g. 500000) *" required>
+  <input name="premium" id="premium" placeholder="Premium Amount (e.g. 2500) *" required>
+  <input name="nominee" id="nominee" placeholder="Nominee Name *" required>
+
+  <button type="submit">Submit Application</button>
+</form>
+
+<p id="message"></p>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwQLrD2OvGFZ97oDdhLaN4f4Cbs-vjlb02R1ZqyCszxxmLHDP3OXVaPT0iXBUHnV3DY/exec";
+
+document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const data = {
+    name: document.getElementById('name').value.trim(),
+    mobile: document.getElementById('mobile').value.trim(),
+    dob: document.getElementById('dob').value,
+    plan: document.getElementById('plan').value,
+    sum: document.getElementById('sum').value.trim(),
+    premium: document.getElementById('premium').value.trim(),
+    nominee: document.getElementById('nominee').value.trim()
+  };
+
+  // Basic Validation
+  if (!data.name || !data.mobile || !data.dob || !data.plan || !data.sum || !data.premium || !data.nominee) {
+    document.getElementById('message').innerHTML = "<span class='error'>Please fill all required fields.</span>";
+    return;
+  }
+
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+    document.getElementById('message').innerHTML = "<strong>Application submitted successfully! 🎉</strong>";
+    this.reset();
+  } catch (err) {
+    document.getElementById('message').innerHTML = "<span class='error'>Submission failed. Try again later.</span>";
+    console.error(err);
+  }
+});
+</script>
+
+</body>
+</html>
