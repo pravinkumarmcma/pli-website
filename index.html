@@ -14,6 +14,34 @@
 <p>Government-backed plans for peace of mind.</p>
 
 <a href="apply.html">Apply Now</a>
+<h3>Get a Free Call Back</h3>
+
+<input id="leadName" placeholder="Your Name">
+<input id="leadMobile" placeholder="Mobile Number">
+
+<button onclick="saveLead()">Request Call</button>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwQLrD2OvGFZ97oDdhLaN4f4Cbs-vjlb02R1ZqyCszxxmLHDP3OXVaPT0iXBUHnV3DY/exec";
+
+function saveLead(){
+  const data = {
+    name: document.getElementById("leadName").value,
+    mobile: document.getElementById("leadMobile").value,
+    source: "Landing Page"
+  };
+
+  if(!data.mobile) return alert("Enter mobile number");
+
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  alert("We will contact you shortly");
+}
+</script>
 
 </body>
 </html>
+
