@@ -3,87 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <title>PLI / RPLI Application</title>
+
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input, select { width: 100%; margin: 8px 0; padding: 10px; }
-    button { padding: 10px 20px; background: #007bff; color: #fff; border: none; cursor: pointer; }
-    .error { color: red; font-size: 14px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    input, select {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px;
+      width: 100%;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #999;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+
+    .success {
+      color: green;
+      font-size: 16px;
+      font-weight: bold;
+    }
   </style>
 </head>
+
 <body>
 
 <h2>Postal Life Insurance Application</h2>
 
 <form id="applicationForm">
-  
-  <input name="name" id="name" placeholder="Full Name *" required>
-  <input name="mobile" id="mobile" placeholder="Mobile Number *" pattern="[0-9]{10}" title="Enter 10 digit mobile number" required>
-  <input name="dob" id="dob" type="date" placeholder="Date of Birth *" required>
 
-  <select name="plan" id="plan" required>
+  <input id="name" placeholder="Full Name *" required>
+
+  <input id="mobile" placeholder="Mobile Number *"
+         pattern="[0-9]{10}"
+         title="Enter 10 digit mobile number"
+         required>
+
+  <input id="dob" type="date" required>
+
+  <select id="plan" required>
     <option value="">Select Plan *</option>
     <option value="PLI">PLI</option>
     <option value="RPLI">RPLI</option>
   </select>
 
-  <input name="sum" id="sum" placeholder="Sum Assured (e.g. 500000) *" required>
-  <input name="premium" id="premium" placeholder="Premium Amount (e.g. 2500) *" required>
-  <input name="nominee" id="nominee" placeholder="Nominee Name *" required>
+  <input id="sum" placeholder="Sum Assured (e.g. 500000) *" required>
 
-  <button type="submit">Submit Application</button>
+  <input id="premium" placeholder="Premium Amount (e.g. 2500) *" required>
+
+  <input id="nominee" placeholder="Nominee Name *" required>
+
+  <button id="submitBtn" type="submit">Submit Application</button>
+
 </form>
 
 <p id="message"></p>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwQLrD2OvGFZ97oDdhLaN4f4Cbs-vjlb02R1ZqyCszxxmLHDP3OXVaPT0iXBUHnV3DY/exec";
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwQLrD2OvGFZ97oDdhLaN4f4Cbs-vjlb02R1ZqyCszxxmLHDP3OXVaPT0iXBUHnV3DY/exec";
 
-document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+document.getElementById("applicationForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
+  const message = document.getElementById("message");
+  const button = document.getElementById("submitBtn");
+
   const data = {
-    name: document.getElementById('name').value.trim(),
-    mobile: document.getElementById('mobile').value.trim(),
-    dob: document.getElementById('dob').value,
-    plan: document.getElementById('plan').value,
-    sum: document.getElementById('sum').value.trim(),
-    premium: document.getElementById('premium').value.trim(),
-    nominee: document.getElementById('nominee').value.trim()
+    name: document.getElementById("name").value.trim(),
+    mobile: document.getElementById("mobile").value.trim(),
+    dob: document.getElementById("dob").value,
+    plan: document.getElementById("plan").value,
+    sum: document.getElementById("sum").value.trim(),
+    premium: document.getElementById("premium").value.trim(),
+    nominee: document.getElementById("nominee").value.trim()
   };
 
-  // Basic Validation
-  if (!data.name || !data.mobile || !data.dob || !data.plan || !data.sum || !data.premium || !data.nominee) {
-    document.getElementById('message').innerHTML = "<span class='error'>Please fill all required fields.</span>";
+  // Validation
+  if (
+    !data.name || !data.mobile || !data.dob || !data.plan ||
+    !data.sum || !data.premium || !data.nominee
+  ) {
+    message.innerHTML = "<span class='error'>Please fill all required fields.</span>";
     return;
   }
 
-  try {
-    await fetch(API_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data),
-  mode: "no-cors"
-});
-    document.getElementById('message').innerHTML = "<strong>Application submitted successfully! 🎉</strong>";
-    this.reset();
-  } catch (err) {
-    document.getElementById('message').innerHTML = "<span class='error'>Submission failed. Try again later.</span>";
-    console.error(err);
+  if (!/^[0-9]{10}$/.test(data.mobile)) {
+    message.innerHTML = "<span class='error'>Enter valid 10-digit mobile number.</span>";
+    return;
   }
-});
-if (!/^[0-9]{10}$/.test(data.mobile)) {
-  document.getElementById('message').innerHTML =
-    "<span class='error'>Enter a valid 10-digit mobile number.</span>";
-  return;
-}
 
+  button.disabled = true;
+  message.innerHTML = "Submitting, please wait...";
+
+  fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data),
+    mode: "no-cors"
+  }).then(() => {
+    message.innerHTML =
+      "<span class='success'>Application submitted successfully ✅</span>";
+    document.getElementById("applicationForm").reset();
+    button.disabled = false;
+  }).catch(() => {
+    message.innerHTML =
+      "<span class='error'>Submission failed. Please try again.</span>";
+    button.disabled = false;
+  });
+
+});
 </script>
 
 </body>
 </html>
-
 
 
 
