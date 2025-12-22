@@ -58,10 +58,7 @@ document.getElementById('applicationForm').addEventListener('submit', async func
   }
 
   try {
-    await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify(data)
-    });
+    await 
     document.getElementById('message').innerHTML = "<strong>Application submitted successfully! 🎉</strong>";
     this.reset();
   } catch (err) {
@@ -79,5 +76,6 @@ if (!/^[0-9]{10}$/.test(data.mobile)) {
 
 </body>
 </html>
+
 
 
